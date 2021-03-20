@@ -124,14 +124,13 @@ func TrendingStream(c chan Message, refreshInterval time.Duration) {
 
 //SuggestedStream -- passes stocktwits posts to chan c once every refreshInterval
 //set refreshInterval to more than 20 Seconds or will have to wait for limit count to reset.
-func SuggestedStream(c chan Message, refreshInterval time.Duration) {
+func SuggestedStream(c chan []Message, refreshInterval time.Duration) {
 
 	for {
 		msg, calls, reset, err := getSuggested()
 
-		for _, v := range msg {
-			c <- v
-		}
+		c <- msg
+
 		if calls == 0 && reset > time.Now().Unix() {
 			time.Sleep(time.Duration((reset-time.Now().Unix())+1) * time.Second)
 			continue
